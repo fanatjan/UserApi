@@ -13,7 +13,7 @@ A simple Restful api, which one contains CRUD operation for users and their own 
 ###### possible responses
 * 200 - OK
 * 400 - Bad Request
-* 500 - Internal Server Error
+* 
 
 #### Created
 - spring boot
