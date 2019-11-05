@@ -1,4 +1,4 @@
-package entity;
+package com.simpleproject.UserApi.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
@@ -10,12 +10,16 @@ import java.util.Date;
 
 @Entity
 @Data
-@Builder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "note")
 public class Note {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
 
     @Max(50)
     private String title;
@@ -34,6 +38,6 @@ public class Note {
     private Date lastUpdateTime;
 
     @JsonBackReference
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     private User user;
 }

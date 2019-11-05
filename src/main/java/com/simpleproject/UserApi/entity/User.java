@@ -1,4 +1,4 @@
-package entity;
+package com.simpleproject.UserApi.entity;
 
 import lombok.*;
 
@@ -8,13 +8,18 @@ import java.util.*;
 
 @Entity
 @Data
-@Builder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "user")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+
+    @Column(unique = true,name = "email")
     private String email;
 
     private String password;
