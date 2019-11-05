@@ -1,17 +1,18 @@
 package com.simpleproject.UserApi.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Entity
-@Data
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "user")
+@Data
 public class User {
 
     @Id
@@ -34,6 +35,8 @@ public class User {
     @Column(name = "last_update_time")
     private Date lastUpdateTime;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private Set<Note> notes = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Note> notes;
+
 }
