@@ -13,6 +13,7 @@ import java.util.*;
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "user")
 @Data
+@Builder
 public class User {
 
     @Id

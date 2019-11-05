@@ -28,6 +28,16 @@ public class UserController {
      * Get all UsersDto
      * @return list of tabs dto
      */
+    @GetMapping(value = "/{id}", produces = "application/json")
+    public UserDto getUser(@PathVariable(value = "id") Long id){
+        try {
+            return convertToDto(userService.getById(id));
+        }catch (NotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, userService.USER_NOT_FOUND);
+        }
+    }
+
     @GetMapping(produces = "application/json")
     public List<UserDto> getUsers(){
         return userService.getAll().stream()
