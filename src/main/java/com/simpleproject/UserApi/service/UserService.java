@@ -13,19 +13,31 @@ import javax.persistence.PersistenceContext;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Service layer class to work with DB
+ * All entities detached before return
+ */
 @Service
 @AllArgsConstructor
 public class UserService {
 
     public static final String USER_NOT_FOUND= "User Not Found id:";
+
     public static final String VALID_EMAIL_ADDRESS ="^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+
     public static final int MAX_PASS_SIZE = 8;
+
     private UserRepository userRepository;
+
     private PasswordEncoder passwordEncoder;
 
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * find all Users with notes
+     * @return User list
+     */
     public List<User> getAll() {
         List<User> users = userRepository.findAll();
         users.forEach(user ->{
@@ -34,12 +46,24 @@ public class UserService {
         return users;
     }
 
+    /**
+     * find user by id
+     * @param id
+     * @return User
+     * @throws NotFoundException
+     */
     public User getById(long id) throws NotFoundException {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + id));
         entityManager.detach(user);
         return user;
     }
 
+    /**
+     * create new user, throw exception if params not valid
+     * @param user
+     * @return User
+     * @throws NotValidParamException
+     */
     public User save(User user) throws NotValidParamException {
         if(!userIsValid(user)) throw new NotValidParamException();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -47,9 +71,18 @@ public class UserService {
         user.setLastUpdateTime(user.getCreateTime());
         User newUser = userRepository.save(user);
         entityManager.detach(user);
-        return user;
+        return newUser;
     }
 
+
+    /**
+     * Update existing user by id, throw exception if params not valid or user not exist
+     * @param id
+     * @param user
+     * @return User
+     * @throws NotFoundException
+     * @throws NotValidParamException
+     */
     public User update(long id, User user) throws NotFoundException, NotValidParamException {
         if(!userIsValid(user)) throw new NotValidParamException();
         User newUser = userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + id));
@@ -77,6 +110,7 @@ public class UserService {
      */
     private boolean userIsValid(User user) {
         return !user.getEmail().isEmpty() && !user.getPassword().isEmpty()
-               && user.getPassword().length() <= MAX_PASS_SIZE && user.getEmail().matches(VALID_EMAIL_ADDRESS);
+               && user.getPassword().length() <= MAX_PASS_SIZE
+                && user.getEmail().matches(VALID_EMAIL_ADDRESS); // validate an email
     }
 }

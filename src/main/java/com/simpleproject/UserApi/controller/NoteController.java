@@ -18,13 +18,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
+/**
+ * Controller to work with /note rest requestst
+ */
 @AllArgsConstructor
 @RestController
 public class NoteController {
 
     private NoteService noteService;
     private UserService userService;
-    private static final String  INVALID_NOTE_REQUEST= "invalid note request";
+    public static final String  INVALID_NOTE_REQUEST= "invalid note request";
 
     /**
      * Get all UsersDto
@@ -45,7 +49,7 @@ public class NoteController {
     @PostMapping(value = "users/{userId}/notes", produces = "application/json")
     public NoteDto addNote(@PathVariable(value = "userId") Long userId, @Valid @RequestBody NoteDto noteDto){
         try {
-            User user = userService.getById(userId);
+            User user = userService.getById(userId); // find user by id
             Note note = convertToEntity(noteDto);
             note.setUser(user);
             note = noteService.save(note);
@@ -55,7 +59,7 @@ public class NoteController {
                     HttpStatus.BAD_REQUEST, INVALID_NOTE_REQUEST);
         } catch (NotFoundException e){
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, userService.USER_NOT_FOUND);
+                    HttpStatus.BAD_REQUEST, UserService.USER_NOT_FOUND);
         }
     }
 
@@ -68,14 +72,14 @@ public class NoteController {
     @PutMapping(value = "users/{userId}/notes/{id}", produces = "application/json")
     public NoteDto putNote(@PathVariable(value = "userId") Long userId, @PathVariable(value = "id") Long id, @Valid @RequestBody NoteDto noteDto){
         try {
-            User user = userService.getById(userId);
+            User user = userService.getById(userId); // find user by id
             Note note = convertToEntity(noteDto);
             note.setUser(user);
             note = noteService.update(id, note);
             return convertToDto(note);
         }catch (NotFoundException e){
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, noteService.NOTE_NOT_FOUND + "or" +  userService.USER_NOT_FOUND);
+                    HttpStatus.NOT_FOUND, NoteService.NOTE_NOT_FOUND + "or" +  UserService.USER_NOT_FOUND);
         } catch (NotValidParamException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, INVALID_NOTE_REQUEST);
@@ -93,7 +97,7 @@ public class NoteController {
             noteService.delete(id);
         } catch (NotFoundException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, noteService.NOTE_NOT_FOUND);
+                    HttpStatus.NOT_FOUND, NoteService.NOTE_NOT_FOUND);
         }
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);

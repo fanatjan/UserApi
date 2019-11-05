@@ -1,16 +1,10 @@
 package com.simpleproject.UserApi.service;
 
 import com.simpleproject.UserApi.entity.Note;
-import com.simpleproject.UserApi.entity.User;
 import com.simpleproject.UserApi.exception.NotValidParamException;
 import com.simpleproject.UserApi.repository.NoteRepository;
-import com.simpleproject.UserApi.repository.UserRepository;
 import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -18,6 +12,10 @@ import javax.persistence.PersistenceContext;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Service layer class to work with DB
+ * All entities detached before return
+ */
 @Service
 @AllArgsConstructor
 public class NoteService {
@@ -42,7 +40,7 @@ public class NoteService {
     /**
      * find Note by ID
      * @param id
-     * @return Note
+     * @return Note entity
      * @throws NotFoundException
      */
     public Note getById(long id) throws NotFoundException {
@@ -52,7 +50,7 @@ public class NoteService {
     }
 
     /**
-     * Add new note
+     * Add new note, throw exception if params not valid
      * @param note
      * @return Note
      * @throws NotValidParamException if field is not valid
@@ -67,7 +65,7 @@ public class NoteService {
     }
 
     /**
-     * Update note params
+     * Update note params, throw exception if params not valid or note not exist
      * @param id
      * @param note
      * @return Note

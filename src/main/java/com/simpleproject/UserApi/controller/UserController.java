@@ -16,13 +16,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
+/**
+ * Controller to work with /User rest requests
+ */
 @AllArgsConstructor
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private UserService userService;
-    private static final String INVALID_USER_REQUEST= "invalid user request";
+    public static final String INVALID_USER_REQUEST= "invalid user request";
 
     /**
      * Get all UsersDto
@@ -34,7 +38,7 @@ public class UserController {
             return convertToDto(userService.getById(id));
         }catch (NotFoundException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, userService.USER_NOT_FOUND);
+                    HttpStatus.NOT_FOUND, UserService.USER_NOT_FOUND);
         }
     }
 
@@ -75,7 +79,7 @@ public class UserController {
             return convertToDto(user);
         }catch (NotFoundException e){
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, userService.USER_NOT_FOUND);
+                    HttpStatus.NOT_FOUND, UserService.USER_NOT_FOUND);
         } catch (NotValidParamException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, INVALID_USER_REQUEST);
@@ -93,7 +97,7 @@ public class UserController {
             userService.delete(id);
         } catch (NotFoundException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, userService.USER_NOT_FOUND);
+                    HttpStatus.NOT_FOUND, UserService.USER_NOT_FOUND);
         }
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
@@ -101,9 +105,9 @@ public class UserController {
     }
 
     /**
-     *
+     * Convert entity to dto object
      * @param user
-     * @return
+     * @return UserDto
      */
     private UserDto convertToDto(User user) {
         UserDto userDto = new UserDto();
@@ -115,9 +119,9 @@ public class UserController {
     }
 
     /**
-     *
+     * Convert dto to entity
      * @param userDto
-     * @return
+     * @return User
      */
     private User convertToEntity(UserDto userDto) {
         User user = new User();
