@@ -34,8 +34,7 @@ public class NoteController {
      * Get all UsersDto
      * @return list of tabs dto
      */
-    @RequestMapping("/notes")
-    @GetMapping(produces = "application/json")
+    @GetMapping(value = "/notes", produces = "application/json")
     public List<NoteDto> getNotes(){
         return noteService.getAll().stream().map(this::convertToDto)
                 .collect(Collectors.toList());

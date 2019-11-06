@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.persistence.EntityManager;
 import java.util.Arrays;
@@ -48,7 +49,7 @@ public class UserServiceTest {
         );
         when(userRepository.save(any())).thenReturn(defUser);
         when(userRepository.findById(any())).thenReturn(Optional.of(defUser));
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        PasswordEncoder passwordEncoder = NoOpPasswordEncoder.getInstance();
         userService = new UserService(userRepository, passwordEncoder, entityManager);
     }
 
@@ -62,6 +63,11 @@ public class UserServiceTest {
         assertThrows(NotValidParamException.class, () -> userService.save(new User()));
         assertThrows(NotValidParamException.class, () -> userService.save(User.builder().email("").build()));
         assertThrows(NotValidParamException.class, () -> userService.save(User.builder().email("myemail@mail.com").build()));
-        assertNotNull(userService.save(User.builder().email("myemail@mail.com").password("pass").lastUpdateTime(new Date()).createTime(new Date()).build()));
+        assertNotNull(userService.save(User.builder()
+                .email("fanatjan@mail.ru")
+                .password("pass")
+                .lastUpdateTime(new Date())
+                .createTime(new Date())
+                .build()));
     }
 }

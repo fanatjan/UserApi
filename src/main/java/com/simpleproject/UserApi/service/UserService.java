@@ -109,7 +109,10 @@ public class UserService {
      * @return true if all necessary fields is validity
      */
     private boolean userIsValid(User user) {
-        return !user.getEmail().isEmpty() && !user.getPassword().isEmpty()
+        return user.getEmail()!= null &&
+               !user.getEmail().isEmpty()
+                && user.getPassword() != null
+                && !user.getPassword().isEmpty()
                && user.getPassword().length() <= MAX_PASS_SIZE
                 && user.getEmail().matches(VALID_EMAIL_ADDRESS); // validate an email
     }
